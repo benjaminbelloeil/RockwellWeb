@@ -3,6 +3,8 @@ import { Bars3CenterLeftIcon, PencilIcon, ChevronDownIcon, Cog8ToothIcon, ArrowL
 import { BellIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { Menu, Transition, Popover } from "@headlessui/react";
 import Link from "next/link";
+import { useSession } from "next-auth/react"
+
 
 
 export default function TopBar({ showNav, setShowNav }) {
@@ -83,7 +85,8 @@ export default function TopBar({ showNav, setShowNav }) {
                                     alt="Profile Picture"
                                     />
                             </picture>
-                            <span className="hidden md:block font-medium text-gray-700">Benjamin Belloeil</span>
+                            {/* {session.user.name} */}
+                            <span className="hidden md:block font-medium text-gray-700">Username</span>
                             <ChevronDownIcon className="ml-2 h-4 w-4 text-gray-700" />
                         </Menu.Button>
                     </div>
@@ -105,7 +108,7 @@ export default function TopBar({ showNav, setShowNav }) {
                                         </Link>
                                     </Menu.Item>
                                     <Menu.Item>
-                                        <Link href="/MainForm" className="flex hover:bg-red-500 hover:text-white text-gray-700 rounded p-2 text-sm group transition-colors items-center">
+                                        <Link href="/LoginForm" className="flex hover:bg-red-500 hover:text-white text-gray-700 rounded p-2 text-sm group transition-colors items-center">
                                             <ArrowLeftEndOnRectangleIcon className="h-4 w-4 mr-2" />
                                             Log Out
                                         </Link>
