@@ -9,8 +9,11 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
       const { email, password } = req.body;
 
-      // Check if user exists
-      const user = await User.findOne({ where: { email } });
+      // Trim whitespace from the email address and convert to lowercase
+      const trimmedEmail = email.trim().toLowerCase();
+
+      // Check if user exists (case-insensitive)
+      const user = await User.findOne({ where: { email: trimmedEmail } });
 
       if (!user) {
         return res.status(401).json({ message: 'Invalid email or password' });
