@@ -1,11 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaLock, FaLinkedin, FaGithub, FaGoogle, FaRegEnvelope, FaUser } from 'react-icons/fa';
+import { FaLock, FaRegEnvelope, FaUser, FaGithub, FaGoogle } from 'react-icons/fa';
 import { useFormik } from 'formik';
-import { signup_validate } from "../../lib/validate.js";
+import signup_validate from "../../lib/validate.js";
 
 export default function SignupForm() {
-
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -14,7 +13,26 @@ export default function SignupForm() {
       cPassword: ''
     },
     onSubmit: async (values) => {
-      console.log(values);
+      try {
+        const response = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(values),
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.message);
+        }
+
+        const data = await response.json();
+        console.log(data); // Log response from the server
+        window.location.href = '/'; // Redirect to home page after successful signup
+      } catch (error) {
+        alert(error.message); // Display error message
+      }
     },
     validate: signup_validate,
   });

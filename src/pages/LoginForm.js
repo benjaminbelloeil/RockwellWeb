@@ -6,14 +6,34 @@ import { signIn } from "next-auth/react";
 import { useFormik } from "formik";
 import login_validate from "../../lib/validate.js";
 
-export default function Home() {
+export default function LoginForm() {
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
     },
     onSubmit: async (values) => {
-      console.log(values);
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(values),
+        });
+
+        if (response.ok) {
+          // Redirect to home page on successful login
+          window.location.href = '/';
+        } else {
+          const data = await response.json();
+          console.error(data); // Log error response
+          alert(data.message); // Display error message
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.'); // Display error message
+      }
     },
     validate: login_validate,
   });

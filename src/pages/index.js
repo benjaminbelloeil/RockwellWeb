@@ -2,13 +2,12 @@ import { useSession, getSession } from "next-auth/react";
 import LoginForm from './LoginForm';
 import Layout from "../components/Layout";
 
-
 export default function Home() {
   const { data: session } = useSession();
 
   return (
     <div className="flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
-      {session ? User({ session }) : Guest()}
+      {session ? <User session={session} /> : <Guest />}
     </div>
   );
 }
@@ -41,7 +40,7 @@ export async function getServerSideProps({ req }) {
   if (!session) {
     return {
       redirect: {
-        destination: "/LoginForm",
+        destination: "/LoginForm", // Redirect to login form if not authenticated
         permanent: false,
       },
     };
