@@ -3,11 +3,14 @@ import { Bars3CenterLeftIcon, PencilIcon, ChevronDownIcon, Cog8ToothIcon, ArrowL
 import { BellIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { Menu, Transition, Popover } from "@headlessui/react";
 import Link from "next/link";
-import { useSession } from "next-auth/react"
+import { signOut } from "next-auth/react"
 
 
 
 export default function TopBar({ showNav, setShowNav }) {
+    function handleSignOut() {
+        signOut();
+      }
     return (
         <div className= {`fixed w-full h-16 flex justify-between items-center transition-all duration-[400ms] ${showNav ? "pl-56" : ""}`}>
             <div className="pl-4 md:pl-16">
@@ -108,9 +111,9 @@ export default function TopBar({ showNav, setShowNav }) {
                                         </Link>
                                     </Menu.Item>
                                     <Menu.Item>
-                                        <Link href="/LoginForm" className="flex hover:bg-red-500 hover:text-white text-gray-700 rounded p-2 text-sm group transition-colors items-center">
+                                        <Link href="/LoginForm" onClick={handleSignOut} className="flex hover:bg-red-500 hover:text-white text-gray-700 rounded p-2 text-sm group transition-colors items-center">
                                             <ArrowLeftEndOnRectangleIcon className="h-4 w-4 mr-2" />
-                                            Log Out
+                                            Sign Out
                                         </Link>
                                     </Menu.Item>
                                 </div>

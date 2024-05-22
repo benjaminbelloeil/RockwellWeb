@@ -1,16 +1,14 @@
-import { Inter } from "next/font/google";
 import { useSession, getSession } from "next-auth/react";
 import LoginForm from './LoginForm';
-import Layout from "@/components/Layout";
+import Layout from "../components/Layout";
 
-const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const { data: session } = useSession();
 
   return (
     <div className="flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
-      {session ? <User session={session} /> : <Guest />}
+      {session ? User({ session }) : Guest()}
     </div>
   );
 }
