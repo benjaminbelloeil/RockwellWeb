@@ -24,7 +24,7 @@ export default function LoginForm() {
 
         if (response.ok) {
           // Redirect to home page on successful login
-          window.location.href = '/';
+          window.location.href = '/Dashboard';
         } else {
           const data = await response.json();
           console.error(data); // Log error response
