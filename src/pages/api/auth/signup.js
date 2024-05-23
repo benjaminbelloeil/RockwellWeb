@@ -1,28 +1,29 @@
-// pages/api/auth/signup.js
-
-const User = require('../../../../model/User');
 import { connectPostgres } from '../../../../database/conn';
+import User from '../../../../model/User';
+import bcrypt from 'bcrypt';
 
 export default async function handler(req, res) {
-  await connectPostgres();
+  try {
+    await connectPostgres();
 
-  if (req.method === 'POST') {
-    const { username, email, password } = req.body;
+    if (req.method === 'POST') {
+      const { username, email, password } = req.body;
 
-    try {
-      // Check if user with the provided email already exists
-      const existingUser = await User.findOne({ where: { email } });
-      if (existingUser) {
-        return res.status(400).json({ message: 'Email is already in use' });
-      }
+      // Standardize email
+      const standardizedEmail = email.trim().toLowerCase();
 
-      // Create new user if email is not in use
-      const newUser = await User.create({ username, email, password });
-      res.status(201).json({ message: 'User created', user: newUser });
-    } catch (error) {
-      res.status(400).json({ message: 'Error creating user', error });
+      // Hash password
+      const passwordHash = await bcrypt.hash(password, 10);
+
+      // Create user
+      const newUser = await User.create({ username, email: standardizedEmail, password: passwordHash });
+
+      return res.status(201).json({ message: 'User created successfully', user: newUser });
+    } else {
+      return res.status(405).json({ message: 'Method not allowed' });
     }
-  } else {
-    res.status(405).json({ message: 'Method not allowed' });
+  } catch (error) {
+    console.error('Sign-up error:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 }
