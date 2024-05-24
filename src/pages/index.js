@@ -1,3 +1,4 @@
+// index.js
 import { useSession, getSession } from "next-auth/react";
 import LoginForm from './LoginForm';
 import Dashboard from './Dashboard';
@@ -6,7 +7,7 @@ export default function Home() {
   const { data: session } = useSession();
 
   return (
-    <div className="flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
+    <div>
       {session ? <User session={session} /> : <Guest />}
     </div>
   );
@@ -21,7 +22,7 @@ function Guest() {
 }
 
 function User({ session }) {
-  return <Dashboard session={session}/>
+  return <Dashboard session={session} />
 }
 
 export async function getServerSideProps({ req }) {

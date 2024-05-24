@@ -27,14 +27,4 @@ User.prototype.comparePassword = async function(candidatePassword) {
   }
 };
 
-// Hash password before saving
-User.beforeCreate(async (user) => {
-  try {
-    const hashedPassword = await bcrypt.hash(user.password, 10); // Salt rounds: 10
-    user.password = hashedPassword;
-  } catch (error) {
-    throw new Error('Error hashing password: ' + error.message);
-  }
-});
-
 module.exports = User;
