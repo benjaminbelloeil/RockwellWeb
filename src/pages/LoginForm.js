@@ -5,8 +5,11 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useFormik } from "formik";
 import login_validate from "../../lib/validate.js";
+import { useRouter } from 'next/router'; // Import useRouter
 
 export default function LoginForm() {
+  const router = useRouter(); // Initialize useRouter
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -23,16 +26,15 @@ export default function LoginForm() {
         });
 
         if (response.ok) {
-          // Redirect to home page on successful login
-          window.location.href = '/';
+          router.push('/Dashboard');
         } else {
           const data = await response.json();
-          console.error(data); // Log error response
-          alert(data.message); // Display error message
+          console.error(data);
+          alert(data.message);
         }
       } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred. Please try again.'); // Display error message
+        alert('An error occurred. Please try again.'); 
       }
     },
     validate: login_validate,

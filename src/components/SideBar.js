@@ -16,7 +16,7 @@ const SideBar = forwardRef(({ showNav }, ref) => {
       </div>
 
       <div className="flex flex-col">
-        <Link href={{ pathname: '/', query: { tab: 'home' } }} passHref>
+        <Link href={{ pathname: '/Dashboard', query: { tab: 'home' } }} passHref>
           <div
             className={`pl-6 py-3 mx-5 rounded text-center cursor-pointer mb-3 flex items-center transition-colors ${
               router.query.tab === "home" || !router.query.tab
@@ -32,7 +32,7 @@ const SideBar = forwardRef(({ showNav }, ref) => {
             </div>
           </div>
         </Link>
-        <Link href={{ pathname: '/', query: { tab: 'account' } }} passHref>
+        <Link href={{ pathname: '/Dashboard', query: { tab: 'account' } }} passHref>
           <div
             className={`pl-6 py-3 mx-5 rounded text-center cursor-pointer mb-3 flex items-center transition-colors ${
               router.query.tab === "account"
@@ -48,7 +48,7 @@ const SideBar = forwardRef(({ showNav }, ref) => {
             </div>
           </div>
         </Link>
-        <Link href={{ pathname: '/', query: { tab: 'products' } }} passHref>
+        <Link href={{ pathname: '/Dashboard', query: { tab: 'products' } }} passHref>
           <div
             className={`pl-6 py-3 mx-5 rounded text-center cursor-pointer mb-3 flex items-center transition-colors ${
               router.query.tab === "products"
