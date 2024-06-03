@@ -1,3 +1,6 @@
+import React from 'react';
+import UnityGameComponent from './UnityGameComponent'; // Import your Unity game component
+
 export default function Home() {
   return (
     <div className="p-6">
@@ -27,6 +30,11 @@ export default function Home() {
           <h2 className="text-gray-700 text-2xl font-bold mb-2">Support</h2>
           <p className="text-gray-600">Need help? Access our support resources and get assistance.</p>
         </div>
+      </div>
+
+      {/* Add the Unity game component */}
+      <div className="mt-8 flex justify-center">
+        <UnityGameComponent />
       </div>
     </div>
   );

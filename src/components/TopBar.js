@@ -1,4 +1,5 @@
-import { Fragment } from "react";
+// TopBar.js
+import { Fragment, useEffect, useState } from "react";
 import { Bars3CenterLeftIcon, PencilIcon, ChevronDownIcon, Cog8ToothIcon, ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
 import { BellIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { Menu, Transition, Popover } from "@headlessui/react";
@@ -8,6 +9,23 @@ import { useRouter } from "next/router";
 
 export default function TopBar({ showNav, setShowNav }) {
   const router = useRouter();
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    async function fetchUsername() {
+      try {
+        const response = await fetch('/api/getUsername');
+        const data = await response.json();
+        if (data.username) {
+          setUsername(data.username);
+        }
+      } catch (error) {
+        console.error("Error fetching username:", error);
+      }
+    }
+
+    fetchUsername();
+  }, []);
 
   function handleSignOut() {
     signOut({ callbackUrl: "/LoginForm" });
@@ -66,15 +84,6 @@ export default function TopBar({ showNav, setShowNav }) {
                       <p className="text-sm text-gray-500 truncate">Notification message goes here</p>
                     </div>
                   </div>
-                  <div className="flex">
-                    <div className="rounded-full shrink-0 bg-green-200 h-8 w-8 flex items-center justify-center">
-                      <CheckIcon className="h-4 w-4 text-green-600" />
-                    </div>
-                    <div className="ml-4">
-                      <p className="font-medium text-gray-700">Notification Title</p>
-                      <p className="text-sm text-gray-500 truncate">Notification message goes here</p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </Popover.Panel>
@@ -90,8 +99,7 @@ export default function TopBar({ showNav, setShowNav }) {
                   alt="Profile Picture"
                 />
               </picture>
-              {/* {session.user.name} */}
-              <span className="hidden md:block font-medium text-gray-700">Username</span>
+              <span className="hidden md:block font-medium text-gray-700">{username || "Username"}</span>
               <ChevronDownIcon className="ml-2 h-4 w-4 text-gray-700" />
             </Menu.Button>
           </div>
@@ -125,4 +133,4 @@ export default function TopBar({ showNav, setShowNav }) {
       </div>
     </div>
   )
-};
+}

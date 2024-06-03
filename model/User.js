@@ -1,6 +1,7 @@
+// User.js
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../database/conn'); // Import sequelize instance
-const bcrypt = require('bcrypt'); // Import bcrypt library
+const { sequelize } = require('../database/conn');
+const bcrypt = require('bcrypt');
 
 const User = sequelize.define('User', {
   username: {
@@ -18,12 +19,24 @@ const User = sequelize.define('User', {
   }
 });
 
-// Define comparePassword method
 User.prototype.comparePassword = async function(candidatePassword) {
   try {
     return await bcrypt.compare(candidatePassword, this.password);
   } catch (error) {
     throw new Error('Error comparing passwords: ' + error.message);
+  }
+};
+
+// Fetch username by email
+User.fetchUsernameByEmail = async function(email) {
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return user.username;
+  } catch (error) {
+    throw new Error('Error fetching username: ' + error.message);
   }
 };
 
