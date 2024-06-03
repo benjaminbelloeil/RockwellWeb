@@ -49,15 +49,6 @@ export default function SignupForm() {
             <div className="py-10">
               <h2 className="text-3xl font-bold text-red-600 mb-2">Welcome to Rockwell!</h2>
               <div className="border-2 w-10 border-red-600 inline-block mb-2"></div>
-              <div className="flex justify-center my-2">
-                <a href="#" className="border-2 border-gray-300 rounded-full p-3 mx-1 hover:scale-110 transition-transform duration-300">
-                  <FaGithub className="text-sm" />
-                </a>
-                <a href="#" className="border-2 border-gray-300 rounded-full p-3 mx-1 hover:scale-110 transition-transform duration-300">
-                  <FaGoogle className="text-sm" />
-                </a>
-              </div>
-              <p className="text-gray-400 text-sm my-3">or use your information to register</p>
               <form onSubmit={formik.handleSubmit} className="flex flex-col items-center">
                 <div className="bg-gray-100 w-64 p-2 flex flex-col mb-3 rounded-lg">
                   <div className="flex items-center">
