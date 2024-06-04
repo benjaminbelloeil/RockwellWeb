@@ -99,7 +99,7 @@ export default function TopBar({ showNav, setShowNav }) {
                   alt="Profile Picture"
                 />
               </picture>
-              <span className="hidden md:block font-medium text-gray-700">{username || "Username"}</span>
+              <span className="hidden md:block font-medium text-gray-700">{username || "Welcome!"}</span>
               <ChevronDownIcon className="ml-2 h-4 w-4 text-gray-700" />
             </Menu.Button>
           </div>

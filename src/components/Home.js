@@ -33,7 +33,7 @@ export default function Home() {
       </div>
 
       {/* Add the Unity game component */}
-      <div className="mt-8 flex justify-center">
+      <div className="mt-2 flex justify-center">
         <UnityGameComponent />
       </div>
     </div>

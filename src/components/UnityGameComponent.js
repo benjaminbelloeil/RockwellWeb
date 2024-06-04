@@ -5,7 +5,7 @@ const UnityGameComponent = () => {
     <div>
       <iframe
         title="Unity Game"
-        src="https://unitygamerockwell.netlify.app/"
+        src="unity-game/index.html"
         width="1050"
         height="750"
         allowFullScreen={true}
