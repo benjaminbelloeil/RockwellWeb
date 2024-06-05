@@ -12,7 +12,7 @@ const SideBar = forwardRef(({ showNav }, ref) => {
   };
 
   return (
-    <div ref={ref} className="fixed w-56 h-full bg-white shadow-sm flex flex-col justify-between">
+    <div ref={ref} className="fixed w-56 h-full bg-white shadow-sm flex flex-col justify-between backdrop-filter backdrop-blur-md bg-opacity-70 z-10">
       <div>
         <div className="flex justify-center mt-6 mb-14">
           <picture>
@@ -71,7 +71,7 @@ const SideBar = forwardRef(({ showNav }, ref) => {
           </Link>
         </div>
       </div>
-      <div className="mb-6 px-5">
+      <div className="mb-6 mx-5">
         <button
           onClick={handleSignOut}
           className="w-full py-3 rounded text-center cursor-pointer flex items-center justify-center transition-colors text-white bg-red-500 hover:bg-red-700"

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 import { Bars3CenterLeftIcon, ChevronDownIcon, Cog8ToothIcon, ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
 import { BellIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { Menu, Transition, Popover } from "@headlessui/react";
@@ -8,30 +8,13 @@ import { useRouter } from "next/router";
 
 export default function TopBar({ showNav, setShowNav }) {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-
-  useEffect(() => {
-    async function fetchUsername() {
-      try {
-        const response = await fetch('/api/getUsername');
-        const data = await response.json();
-        if (data.username) {
-          setUsername(data.username);
-        }
-      } catch (error) {
-        console.error("Error fetching username:", error);
-      }
-    }
-
-    fetchUsername();
-  }, []);
 
   function handleSignOut() {
     signOut({ callbackUrl: "/LoginForm" });
   }
 
   return (
-    <div className={`fixed w-full h-16 flex justify-between items-center transition-all duration-[400ms] ${showNav ? "pl-56" : ""}`}>
+    <div className={`fixed w-full h-16 flex justify-between items-center transition-all duration-[400ms] ${showNav ? "pl-56" : ""} bg-white backdrop-filter backdrop-blur-md bg-opacity-70 z-10`}>
       <div className="pl-4 md:pl-16">
         <Bars3CenterLeftIcon className="h-8 w-8 text-gray-700 cursor-pointer" onClick={() => setShowNav(!showNav)} />
       </div>
@@ -98,7 +81,7 @@ export default function TopBar({ showNav, setShowNav }) {
                   alt="Profile Picture"
                 />
               </picture>
-              <span className="hidden md:block font-medium text-gray-700">{username || "Welcome!"}</span>
+              <span className="hidden md:block font-medium text-gray-700">Welcome!</span>
               <ChevronDownIcon className="ml-2 h-4 w-4 text-gray-700" />
             </Menu.Button>
           </div>
