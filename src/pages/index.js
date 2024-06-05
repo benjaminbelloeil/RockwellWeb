@@ -1,43 +1,26 @@
 // index.js
-import { useSession, getSession } from "next-auth/react";
-import LoginForm from './LoginForm';
-import Dashboard from './Dashboard';
+import { getSession } from "next-auth/react";
 
 export default function Home() {
-  const { data: session } = useSession();
-
-  return (
-    <div>
-      {session ? <User session={session} /> : <Guest />}
-    </div>
-  );
+  return null;
 }
 
-function Guest() {
-  return (
-    <div>
-      <LoginForm />
-    </div>
-  );
-}
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
 
-function User({ session }) {
-  return <Dashboard session={session} />
-}
-
-export async function getServerSideProps({ req }) {
-  const session = await getSession({ req });
-
-  if (!session) {
+  if (session) {
     return {
       redirect: {
-        destination: "/LoginForm", // Redirect to login form if not authenticated
+        destination: "/Dashboard",
         permanent: false,
       },
     };
   }
 
   return {
-    props: { session },
+    redirect: {
+      destination: "/LoginForm",
+      permanent: false,
+    },
   };
 }

@@ -1,3 +1,4 @@
+// SignupForm.js
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaLock, FaRegEnvelope, FaUser, FaGithub, FaGoogle } from 'react-icons/fa';
@@ -29,7 +30,7 @@ export default function SignupForm() {
 
         const data = await response.json();
         console.log(data); // Log response from the server
-        window.location.href = '/'; // Redirect to home page after successful signup
+        window.location.href = '/LoginForm'; // Redirect to login form after successful signup
       } catch (error) {
         alert(error.message); // Display error message
       }

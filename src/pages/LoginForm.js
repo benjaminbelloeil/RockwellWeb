@@ -1,14 +1,15 @@
+// LoginForm.js
 import Image from 'next/image';
-import { FaLinkedin, FaGithub, FaGoogle, FaRegEnvelope } from 'react-icons/fa';
+import { FaGithub, FaGoogle, FaRegEnvelope } from 'react-icons/fa';
 import { MdLockOutline } from 'react-icons/md';
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useFormik } from "formik";
-import login_validate from "../../lib/validate.js";
-import { useRouter } from 'next/router'; // Import useRouter
+import login_validate from "../../lib/validate";
+import { useRouter } from 'next/router';
 
 export default function LoginForm() {
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter();
 
   const formik = useFormik({
     initialValues: {
@@ -17,35 +18,32 @@ export default function LoginForm() {
     },
     onSubmit: async (values) => {
       try {
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(values),
+        const response = await signIn('credentials', {
+          redirect: false,
+          email: values.email,
+          password: values.password,
         });
 
         if (response.ok) {
           router.push('/Dashboard');
         } else {
-          const data = await response.json();
-          console.error(data);
-          alert(data.message);
+          console.error(response.error);
+          alert('Login failed. Please check your credentials.');
         }
       } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred. Please try again.'); 
+        alert('An error occurred. Please try again.');
       }
     },
     validate: login_validate,
   });
 
   const handleGoogleSignin = () => {
-    signIn("google", { callbackUrl: "http://localhost:3000" });
+    signIn("google", { callbackUrl: "/Dashboard" });
   };
 
   const handleGithubSignin = () => {
-    signIn("github", { callbackUrl: "http://localhost:3000" });
+    signIn("github", { callbackUrl: "/Dashboard" });
   };
 
   return (
