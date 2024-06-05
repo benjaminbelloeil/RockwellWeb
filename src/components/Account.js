@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
+import EmailUpdateModal from "./EmailUpdateModal";
+import PasswordChangeModal from "./PasswordChangeModal";
+import DeleteAccountModal from "./DeleteAccountModal";
 
 export default function Account() {
   const [user, setUser] = useState(null);
+  const [isEmailModalOpen, setEmailModalOpen] = useState(false);
+  const [isPasswordModalOpen, setPasswordModalOpen] = useState(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchUserInfo() {
@@ -19,16 +25,7 @@ export default function Account() {
     fetchUserInfo();
   }, []);
 
-  if (!user) {
-    return (
-      <div className="centered-container">
-        <div className="spinner"></div>
-      </div>
-    );
-  }
-
-  const handleUpdateEmail = async () => {
-    const newEmail = prompt("Enter your new email:");
+  const handleUpdateEmail = async (newEmail) => {
     if (newEmail) {
       try {
         const response = await fetch('/api/updateEmail', {
@@ -41,6 +38,7 @@ export default function Account() {
         if (response.ok) {
           setUser({ ...user, email: newEmail });
           alert('Email updated successfully');
+          setEmailModalOpen(false);
         } else {
           alert('Failed to update email');
         }
@@ -51,8 +49,7 @@ export default function Account() {
     }
   };
 
-  const handleChangePassword = async () => {
-    const newPassword = prompt("Enter your new password:");
+  const handleChangePassword = async (newPassword) => {
     if (newPassword) {
       try {
         const response = await fetch('/api/changePassword', {
@@ -64,6 +61,7 @@ export default function Account() {
         });
         if (response.ok) {
           alert('Password changed successfully');
+          setPasswordModalOpen(false);
         } else {
           alert('Failed to change password');
         }
@@ -82,6 +80,7 @@ export default function Account() {
         });
         if (response.ok) {
           alert('Account deleted successfully');
+          setDeleteModalOpen(false);
           // Optionally, redirect the user to the login page or home page
         } else {
           alert('Failed to delete account');
@@ -92,6 +91,14 @@ export default function Account() {
       }
     }
   };
+
+  if (!user) {
+    return (
+      <div className="centered-container">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
@@ -113,7 +120,7 @@ export default function Account() {
             <h2 className="text-gray-800 text-2xl font-bold mb-4">Account Settings</h2>
             <div className="text-gray-700 text-lg mb-4">
               <button 
-                onClick={handleChangePassword} 
+                onClick={() => setPasswordModalOpen(true)} 
                 className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-full"
               >
                 Change Password
@@ -121,7 +128,7 @@ export default function Account() {
             </div>
             <div className="text-gray-700 text-lg mb-4">
               <button 
-                onClick={handleUpdateEmail} 
+                onClick={() => setEmailModalOpen(true)} 
                 className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-full"
               >
                 Update Email
@@ -129,7 +136,7 @@ export default function Account() {
             </div>
             <div className="text-gray-700 text-lg">
               <button 
-                onClick={handleDeleteAccount} 
+                onClick={() => setDeleteModalOpen(true)} 
                 className="text-white bg-red-500 hover:bg-red-700 font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-full"
               >
                 Delete Account
@@ -138,6 +145,22 @@ export default function Account() {
           </div>
         </div>
       </div>
+
+      <EmailUpdateModal 
+        isOpen={isEmailModalOpen} 
+        onRequestClose={() => setEmailModalOpen(false)} 
+        onUpdateEmail={handleUpdateEmail} 
+      />
+      <PasswordChangeModal 
+        isOpen={isPasswordModalOpen} 
+        onRequestClose={() => setPasswordModalOpen(false)} 
+        onChangePassword={handleChangePassword} 
+      />
+      <DeleteAccountModal 
+        isOpen={isDeleteModalOpen} 
+        onRequestClose={() => setDeleteModalOpen(false)} 
+        onDeleteAccount={handleDeleteAccount} 
+      />
     </div>
   );
 }
