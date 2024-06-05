@@ -1,6 +1,5 @@
-// TopBar.js
 import { Fragment, useEffect, useState } from "react";
-import { Bars3CenterLeftIcon, PencilIcon, ChevronDownIcon, Cog8ToothIcon, ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
+import { Bars3CenterLeftIcon, ChevronDownIcon, Cog8ToothIcon, ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
 import { BellIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { Menu, Transition, Popover } from "@headlessui/react";
 import Link from "next/link";
