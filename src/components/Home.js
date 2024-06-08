@@ -1,7 +1,14 @@
-import React from 'react';
-import UnityGameComponent from './UnityGameComponent'; // Import your Unity game component
+// Home.js
+import React, { useState } from 'react';
+import UnityGameComponent from './UnityGameComponent';
 
 export default function Home() {
+  const [gameVersion, setGameVersion] = useState('vertical'); // Default to vertical version
+
+  const toggleGameVersion = () => {
+    setGameVersion((prevVersion) => (prevVersion === 'vertical' ? 'horizontal' : 'vertical'));
+  };
+
   return (
     <div className="p-6">
       <h1 className="text-gray-700 text-4xl mb-8 font-bold">Welcome to the Game Dashboard!</h1>
@@ -32,9 +39,16 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Add the Unity game component */}
-      <div className="mt-2 flex justify-center">
-        <UnityGameComponent />
+      {/* Container for the game and button */}
+      <div className="mt-2 flex justify-center relative">
+        <UnityGameComponent version={gameVersion} />
+        {/* Add button to switch between game versions */}
+        <button
+          onClick={toggleGameVersion}
+          className="absolute top-0 left-0 m-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Switch to {gameVersion === 'vertical' ? 'Horizontal' : 'Vertical'} Version
+        </button>
       </div>
     </div>
   );
