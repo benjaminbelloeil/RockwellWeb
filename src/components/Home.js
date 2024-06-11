@@ -158,7 +158,7 @@ export default function Home() {
       <div className="flex justify-center mt-4">
         <button
           onClick={getSaveGame}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
         >
           Save game progress to cloud
         </button>
@@ -168,7 +168,7 @@ export default function Home() {
       <div className="flex justify-center mt-4">
         <button
           onClick={handleSendSaveGame}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
         >
           Load save game progress from cloud
         </button>
