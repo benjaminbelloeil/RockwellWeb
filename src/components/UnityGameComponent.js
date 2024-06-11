@@ -2,7 +2,7 @@
 import React from 'react';
 
 const UnityGameComponent = ({ version }) => {
-  const srcUrl = version === 'horizontal' ? 'unity-game-Horizontal/index.html' : 'unity-game-Horizontal/index.html';
+  const srcUrl = version === 'horizontal' ? 'buisnessSimWEBGLv0_16/index.html' : 'buisnessSimWEBGL(v0_16)/index.html';
 
   return (
     <div>

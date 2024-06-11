@@ -1,13 +1,96 @@
 // Home.js
-import React, { useState } from 'react';
-import UnityGameComponent from './UnityGameComponent';
+import React, { useState, useEffect, useCallback } from 'react';
+import dynamic from 'next/dynamic';
+import { useUnityContext } from 'react-unity-webgl';
+
+const Unity = dynamic(() => import('react-unity-webgl').then(mod => mod.Unity), { ssr: false });
 
 export default function Home() {
-  const [gameVersion, setGameVersion] = useState('vertical'); // Default to vertical version
+  const { unityProvider, sendMessage } = useUnityContext({
+    loaderUrl: "buisnessSim/build/buisnessSim.loader.js",
+    dataUrl: "buisnessSim/build/buisnessSim.data",
+    frameworkUrl: "buisnessSim/build/buisnessSim.framework.js",
+    codeUrl: "buisnessSim/build/buisnessSim.wasm",
+  });
 
-  const toggleGameVersion = () => {
-    setGameVersion((prevVersion) => (prevVersion === 'vertical' ? 'horizontal' : 'vertical'));
+  useEffect(() => {
+    // Fetch user info from API and save user ID in local storage
+    async function fetchUserInfo() {
+      try {
+        const response = await fetch('/api/getUserInfo');
+        const data = await response.json();
+        if (data.user) {
+          localStorage.setItem('userId', data.user.id);
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    }
+
+    fetchUserInfo();
+  }, []);
+
+  const handleSendSaveGame = () => {
+    console.log('Sending save game data...');
+    const userId = parseInt(localStorage.getItem('userId'), 10);
+    if (userId) {
+      sendMessage("OmniManager", "ReceiveUserID", userId);
+    } else {
+      console.error('User ID not found in local storage');
+    }
   };
+
+  const senduserID = () => {
+    const userId = parseInt(localStorage.getItem('userId'), 10);
+    if (userId) {
+      sendMessage("OmniManager", "ReceiveUserID", userId);
+    } else {
+      console.error('User ID not found in local storage');
+    }
+  };
+
+  const handleReceiveSaveGame = useCallback(async (userID, serializedData) => {
+    const parsedData = JSON.parse(serializedData);
+    
+    try {
+      const response = await fetch('/api/saveGameData', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userID, saveData: parsedData }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save game data');
+      }
+
+      console.log('Game data saved successfully');
+    } catch (error) {
+      console.error('Error saving game data:', error);
+    }
+    console.log('Received save game data:', parsedData);
+  }, []);
+
+  const SendSaveGame = () => {
+    // Logic to send save game data to Unity
+    handleSendSaveGame();
+  };
+
+  useEffect(() => {
+    const JSRecieveSaveGame = (event) => handleReceiveSaveGame(event.detail.userID, event.detail.serializedData);
+    const JSSendSaveGame = () => SendSaveGame();
+
+    window.addEventListener("JStoUnityUserID", senduserID);
+    window.addEventListener("JSRecieveSaveGame", JSRecieveSaveGame);
+    window.addEventListener("JSSendSaveGame", JSSendSaveGame);
+
+    return () => {
+      window.removeEventListener("JStoUnityUserID", senduserID);
+      window.removeEventListener("JSRecieveSaveGame", JSRecieveSaveGame);
+      window.removeEventListener("JSSendSaveGame", JSSendSaveGame);
+    };
+  }, [senduserID, handleReceiveSaveGame, SendSaveGame]);
 
   return (
     <div className="p-6">
@@ -39,15 +122,18 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Container for the game and button */}
+      {/* Container for the game */}
       <div className="mt-2 flex justify-center relative">
-        <UnityGameComponent version={gameVersion} />
-        {/* Add button to switch between game versions */}
+        <Unity unityProvider={unityProvider} style={{ width: "1000px", height: "600px" }} />
+      </div>
+
+      {/* Button to send save game data */}
+      <div className="flex justify-center mt-4">
         <button
-          onClick={toggleGameVersion}
-          className="absolute top-0 left-0 m-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleSendSaveGame}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Switch to {gameVersion === 'vertical' ? 'Horizontal' : 'Vertical'} Version
+          Send Save Game Data
         </button>
       </div>
     </div>
