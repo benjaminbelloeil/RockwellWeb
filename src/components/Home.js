@@ -153,26 +153,6 @@ export default function Home() {
       <div className="mt-2 flex justify-center relative">
         <Unity unityProvider={unityProvider} style={{ width: "1000px", height: "600px" }} />
       </div>
-
-      {/* Button to save game data */}
-      <div className="flex justify-center mt-4">
-        <button
-          onClick={getSaveGame}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
-        >
-          Save game progress to cloud
-        </button>
-      </div>
-
-      {/* Button to load save game data */}
-      <div className="flex justify-center mt-4">
-        <button
-          onClick={handleSendSaveGame}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
-        >
-          Load save game progress from cloud
-        </button>
-      </div>
     </div>
   );
 }
