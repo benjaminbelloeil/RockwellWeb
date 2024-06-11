@@ -1,7 +1,9 @@
+import pg from 'pg';
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const sequelize = new Sequelize('postgres://reto_grupo_3_user:FtBKbiPqR38D1AjTm3HPrMh6N1I096cs@dpg-cocksfnsc6pc73d1vsr0-a.oregon-postgres.render.com/reto_grupo_3', {
+  dialectModule: pg,
   dialect: 'postgres',
   protocol: 'postgres',
   dialectOptions: {
