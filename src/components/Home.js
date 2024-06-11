@@ -1,5 +1,4 @@
-// Home.js
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { useUnityContext } from 'react-unity-webgl';
 
@@ -30,35 +29,68 @@ export default function Home() {
     fetchUserInfo();
   }, []);
 
-  const handleSendSaveGame = () => {
+  const sendUserID = useCallback(() => {
+    const userId = parseInt(localStorage.getItem('userId'), 10);
+    if (userId) {
+      sendMessage("OmniManager", "ReceiveUserID", userId);
+    } else {
+      console.error('User ID not found in local storage');
+    }
+  }, [sendMessage]);
+
+  const getSaveGame = () => {
+    sendUserID();
+    handleSendSaveGameU2JS();
+  };
+
+  const handleSendSaveGameU2JS = () => {
     console.log('Sending save game data...');
     const userId = parseInt(localStorage.getItem('userId'), 10);
     if (userId) {
-      sendMessage("OmniManager", "ReceiveUserID", userId);
+      sendMessage("OmniManager", "SendSaveGame");
     } else {
       console.error('User ID not found in local storage');
     }
   };
 
-  const senduserID = () => {
+  const handleSendSaveGame = useCallback(async () => {
     const userId = parseInt(localStorage.getItem('userId'), 10);
     if (userId) {
-      sendMessage("OmniManager", "ReceiveUserID", userId);
+      try {
+        const response = await fetch(`/api/getSaveGameData?userId=${userId}`);
+        const saveGame = await response.json();
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch save game data');
+        }
+
+        sendMessage("OmniManager", "OmniReceiveSaveGame", JSON.stringify(saveGame));
+        console.log('Save game data fetched and sent to Unity:', saveGame);
+      } catch (error) {
+        console.error('Error fetching save game data:', error);
+      }
     } else {
       console.error('User ID not found in local storage');
     }
-  };
+  }, [sendMessage]);
 
-  const handleReceiveSaveGame = useCallback(async (userID, serializedData) => {
+  const handleReceiveSaveGame = useCallback(async (event) => {
+    const { userID, serializedData } = event.detail;
     const parsedData = JSON.parse(serializedData);
-    
+
+    const userId = parseInt(localStorage.getItem('userId'), 10);
+    if (!userId) {
+      console.error('User ID not found in local storage');
+      return;
+    }
+
     try {
       const response = await fetch('/api/saveGameData', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userID, saveData: parsedData }),
+        body: JSON.stringify({ userId, saveData: parsedData }),
       });
 
       if (!response.ok) {
@@ -72,25 +104,20 @@ export default function Home() {
     console.log('Received save game data:', parsedData);
   }, []);
 
-  const SendSaveGame = () => {
-    // Logic to send save game data to Unity
-    handleSendSaveGame();
-  };
-
   useEffect(() => {
-    const JSRecieveSaveGame = (event) => handleReceiveSaveGame(event.detail.userID, event.detail.serializedData);
-    const JSSendSaveGame = () => SendSaveGame();
+    const JSReceiveSaveGame = (event) => handleReceiveSaveGame(event);
+    const JSSendSaveGame = () => handleSendSaveGame();
 
-    window.addEventListener("JStoUnityUserID", senduserID);
-    window.addEventListener("JSRecieveSaveGame", JSRecieveSaveGame);
+    window.addEventListener("JStoUnityUserID", sendUserID);
+    window.addEventListener("JSReceiveSaveGame", JSReceiveSaveGame);
     window.addEventListener("JSSendSaveGame", JSSendSaveGame);
 
     return () => {
-      window.removeEventListener("JStoUnityUserID", senduserID);
-      window.removeEventListener("JSRecieveSaveGame", JSRecieveSaveGame);
+      window.removeEventListener("JStoUnityUserID", sendUserID);
+      window.removeEventListener("JSReceiveSaveGame", JSReceiveSaveGame);
       window.removeEventListener("JSSendSaveGame", JSSendSaveGame);
     };
-  }, [senduserID, handleReceiveSaveGame, SendSaveGame]);
+  }, [sendUserID, handleReceiveSaveGame, handleSendSaveGame]);
 
   return (
     <div className="p-6">
@@ -127,13 +154,23 @@ export default function Home() {
         <Unity unityProvider={unityProvider} style={{ width: "1000px", height: "600px" }} />
       </div>
 
-      {/* Button to send save game data */}
+      {/* Button to save game data */}
+      <div className="flex justify-center mt-4">
+        <button
+          onClick={getSaveGame}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Save game progress to cloud
+        </button>
+      </div>
+
+      {/* Button to load save game data */}
       <div className="flex justify-center mt-4">
         <button
           onClick={handleSendSaveGame}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Send Save Game Data
+          Load save game progress from cloud
         </button>
       </div>
     </div>
