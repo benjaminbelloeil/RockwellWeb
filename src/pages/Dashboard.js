@@ -1,9 +1,9 @@
-// Dashboard.js
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import Home from "../components/Home";
 import Account from "../components/Account";
 import Products from "../components/Products";
+import Admin from "../components/Admin"; // New component for admin
 import { useSession, getSession } from "next-auth/react";
 import LoginForm from "./LoginForm";
 
@@ -27,6 +27,9 @@ export default function Dashboard() {
       break;
     case "products":
       content = <Products />;
+      break;
+    case "admin":
+      content = session.user.isAdmin ? <Admin /> : <Home />;
       break;
     case "home":
     default:

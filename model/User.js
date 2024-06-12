@@ -1,6 +1,5 @@
-// User.js
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../database/conn');
+const { sequelize } = require('../database/conn'); // Adjust the path as needed
 const bcrypt = require('bcrypt');
 
 const User = sequelize.define('User', {
@@ -16,6 +15,10 @@ const User = sequelize.define('User', {
   password: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  isAdmin: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 });
 
@@ -39,5 +42,7 @@ User.fetchUsernameByEmail = async function(email) {
     throw new Error('Error fetching username: ' + error.message);
   }
 };
+
+
 
 module.exports = User;

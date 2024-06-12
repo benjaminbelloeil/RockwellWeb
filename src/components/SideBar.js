@@ -1,11 +1,13 @@
 import { forwardRef } from "react";
 import Link from "next/link";
-import { HomeIcon, BuildingStorefrontIcon, UserIcon, ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
+import { HomeIcon, BuildingStorefrontIcon, UserIcon, ArrowLeftOnRectangleIcon, ChartBarIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 const SideBar = forwardRef(({ showNav }, ref) => {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const handleSignOut = () => {
     signOut({ callbackUrl: "/LoginForm" });
@@ -69,6 +71,24 @@ const SideBar = forwardRef(({ showNav }, ref) => {
               </div>
             </div>
           </Link>
+          {session?.user.isAdmin && (
+            <Link href={{ pathname: '/Dashboard', query: { tab: 'admin' } }} passHref>
+              <div
+                className={`pl-6 py-3 mx-5 rounded text-center cursor-pointer mb-3 flex items-center transition-colors ${
+                  router.query.tab === "admin"
+                    ? "bg-red-100 text-red-600"
+                    : "text-gray-400 hover:bg-red-100 hover:text-red-600"
+                }`}
+              >
+                <div className="mr-2">
+                  <ChartBarIcon className="h-5 w-5" />
+                </div>
+                <div>
+                  <p>Admin</p>
+                </div>
+              </div>
+            </Link>
+          )}
         </div>
       </div>
       <div className="mb-6 mx-5">

@@ -15,4 +15,5 @@ const SaveGame = sequelize.define('SaveGame', {
     tableName: 'SaveGames'
   });
 
+
 module.exports = SaveGame;
