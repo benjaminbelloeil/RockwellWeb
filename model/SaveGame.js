@@ -9,7 +9,7 @@ const SaveGame = sequelize.define('SaveGame', {
     },
     data: {
       type: DataTypes.JSON,
-      allowNull: false
+      allowNull: true
     }
   }, {
     tableName: 'SaveGames'

@@ -38,41 +38,22 @@ export default function Home() {
     }
   }, [sendMessage]);
 
-  const getSaveGame = () => {
-    sendUserID();
-    handleSendSaveGameU2JS();
-  };
-
-  const handleSendSaveGameU2JS = () => {
-    console.log('Sending save game data...');
-    const userId = parseInt(localStorage.getItem('userId'), 10);
-    if (userId) {
-      sendMessage("OmniManager", "SendSaveGame");
-    } else {
-      console.error('User ID not found in local storage');
-    }
-  };
-
   const handleSendSaveGame = useCallback(async () => {
     const userId = parseInt(localStorage.getItem('userId'), 10);
     if (userId) {
-      try {
         const response = await fetch(`/api/getSaveGameData?userId=${userId}`);
-        const saveGame = await response.json();
-
         if (!response.ok) {
-          throw new Error('Failed to fetch save game data');
+          sendMessage("OmniManager", "OmniReceiveSaveGame", JSON.stringify({}));
+          console.error('Error fetching save game data sending empty.');
+        } else {
+          const saveGame = await response.json();
+          sendMessage("OmniManager", "OmniReceiveSaveGame", JSON.stringify(saveGame));
+          console.log('Save game data fetched and sent to Unity:', saveGame);
         }
-
-        sendMessage("OmniManager", "OmniReceiveSaveGame", JSON.stringify(saveGame));
-        console.log('Save game data fetched and sent to Unity:', saveGame);
-      } catch (error) {
-        console.error('Error fetching save game data:', error);
-      }
     } else {
       console.error('User ID not found in local storage');
     }
-  }, [sendMessage]);
+  }, [sendMessage]);  
 
   const handleReceiveSaveGame = useCallback(async (event) => {
     const { userID, serializedData } = event.detail;
