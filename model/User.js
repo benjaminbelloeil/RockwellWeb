@@ -22,6 +22,8 @@ const User = sequelize.define('User', {
   }
 });
 
+//store proceudre are used to create a new user
+
 User.prototype.comparePassword = async function(candidatePassword) {
   try {
     return await bcrypt.compare(candidatePassword, this.password);
@@ -31,6 +33,7 @@ User.prototype.comparePassword = async function(candidatePassword) {
 };
 
 // Fetch username by email
+// Stored procedures for user authentication
 User.fetchUsernameByEmail = async function(email) {
   try {
     const user = await User.findOne({ where: { email } });
